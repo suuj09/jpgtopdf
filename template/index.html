@@ -1,0 +1,30 @@
+<!-- 파일 위치: pdfproject/template/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>JPG to PDF 변환기</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📄 JPG → PDF 변환기</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+      <label for="jpgFiles">JPG 파일 선택</label>
+      <input type="file" id="jpgFiles" name="jpgFiles" accept=".jpg, .jpeg" multiple required>
+
+      <div id="preview"></div>
+
+      <button type="submit" id="convertBtn">PDF로 변환</button>
+    </form>
+
+    <div id="downloadSection" style="display: none;">
+      <p>변환 완료! 아래 링크를 눌러 다운로드하세요.</p>
+      <a id="downloadLink" href="#" download>📥 PDF 다운로드</a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
