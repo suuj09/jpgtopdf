@@ -14,22 +14,29 @@ def index():
     return render_template('index.html')
 
 @app.route('/convert', methods=['POST'])
+
 def convert():
     image_files = request.files.getlist('jpgFiles')
 
-    image_paths = []
+    image_streams = []
     for file in image_files:
         if file and file.filename.lower().endswith(('.jpg', '.jpeg')):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            image_paths.append(filepath)
+            image_streams.append(file.read())
 
-    # PDF로 변환
+    if not image_streams:
+        return "No valid images", 400
+
     pdf_bytes = BytesIO()
-    with open(pdf_bytes.fileno(), 'wb') as f:  # file descriptor로 오류나므로 아래처럼 바꿈
-        f.write(img2pdf.convert(image_paths))
+    pdf_bytes.write(img2pdf.convert(image_streams))
     pdf_bytes.seek(0)
+
+    return send_file(
+        pdf_bytes,
+        as_attachment=True,
+        download_name="converted.pdf",
+        mimetype='application/pdf'
+    )
+
 
     # 임시 이미지 삭제
     for path in image_paths:
